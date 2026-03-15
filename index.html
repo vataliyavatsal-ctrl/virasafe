@@ -2091,7 +2091,7 @@ footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.05);padding
 
 <script>
 // ===== VIRA API KEY — Apni nayi key yahan paste karo =====
-const VIRA_API_KEY = "YOUR_ANTHROPIC_API_KEY_HERE";
+const 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 = "YOUR_ANTHROPIC_API_KEY_HERE";
 // =========================================================
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -2408,7 +2408,7 @@ async function generateAICommands(lat, lng, nearby){
 
   try{
     const res = await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST", headers:{"Content-Type":"application/json","x-api-key":VIRA_API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      method:"POST", headers:{"Content-Type":"application/json","x-api-key":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,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({model:"claude-sonnet-4-20250514", max_tokens:600,
         messages:[{role:"user", content:`Tu VIRA safety app ka AI safety advisor hai. Ek aurat ki location analyze kar.
 
@@ -2776,7 +2776,7 @@ async function generateAwareness(){
   }
   
   // If no API key, go to fallback directly
-  if(!VIRA_API_KEY || VIRA_API_KEY === 'YOUR_ANTHROPIC_API_KEY_HERE'){
+  if(!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 || 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 === 'YOUR_ANTHROPIC_API_KEY_HERE'){
     document.getElementById(steps[3]).className='astep done';
     loading.style.display='none';
     const warn = document.querySelector('.aware-warning');
@@ -2796,7 +2796,7 @@ async function generateAwareness(){
   try{
     const res = await fetch("https://api.anthropic.com/v1/messages",{
       method:"POST",
-      headers:{"Content-Type":"application/json","x-api-key":VIRA_API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      headers:{"Content-Type":"application/json","x-api-key":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,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({
         model:"claude-sonnet-4-20250514",
         max_tokens:2000,
@@ -3404,7 +3404,7 @@ async function sendDostMessage(){
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": VIRA_API_KEY,
+        "x-api-key": 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,
         "anthropic-version": "2023-06-01",
         "anthropic-dangerous-direct-browser-access": "true"
       },
@@ -3584,7 +3584,7 @@ async function sendMensMessage(){
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": VIRA_API_KEY,
+        "x-api-key": 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,
         "anthropic-version": "2023-06-01",
         "anthropic-dangerous-direct-browser-access": "true"
       },
@@ -4336,7 +4336,7 @@ async function runAIAnalysis(){
   document.getElementById('aiAnalysisTxt').innerHTML='<span style="color:var(--muted)">🧠 AI analysis ho rahi hai...</span>';
   
   // Check if API key is set
-  if(!VIRA_API_KEY || VIRA_API_KEY === 'YOUR_ANTHROPIC_API_KEY_HERE'){
+  if(!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 || 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 === 'YOUR_ANTHROPIC_API_KEY_HERE'){
     // Smart offline analysis
     setTimeout(()=>{
       let msg = '';
@@ -4356,7 +4356,7 @@ async function runAIAnalysis(){
   
   try{
     const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
-      headers:{"Content-Type":"application/json","x-api-key":VIRA_API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      headers:{"Content-Type":"application/json","x-api-key":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,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:200,
         messages:[{role:"user",content:`Tu VIRA safety app ka AI proximity analyzer hai. Ek aurat akeli hai. Bluetooth scan data:\nTotal devices: ${devs.length}\nSuspicious: ${sus.length}\n${sus.map(d=>`- ${d.name}: ${d.seenCount} baar dikh chuka, ${d.dist}m door`).join('\n')}\n\n2-3 line Hinglish mein: situation safe hai ya nahi, kya kare, VIRA kaise help karega.`}]})});
     const data=await res.json();
