@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vira-v1';
+const CACHE_NAME = 'vira-v2';
 const urlsToCache = [
   '/virasafe/',
   '/virasafe/index.html'
