@@ -2536,6 +2536,8 @@ function showToast(msg, type='info', duration=4000){
     setTimeout(()=>toast.remove(), 400); }, duration);
 }
 
+const VIRA_BACKEND = "https://virasafe-backend.onrender.com/api/sos";
+
 // ===== EMERGENCY CONTACT SYSTEM + SOS HISTORY =====
 
 function getEmergencyContacts(){
@@ -3641,7 +3643,48 @@ async function evSaveToCloud(blob, type, filename){
   // Also keep in memory for this session
   evEvidenceList.push(item);
   evRenderCloud();
-  showToast(`✅ ${filename} — Evidence Cloud mein save!`, 'success', 3000);
+
+  // Upload to backend
+  try {
+    if(type === 'audio' || type === 'video' || type === 'photo'){
+      const formData = new FormData();
+      formData.append('audio', blob, filename);
+      
+      // Get current location for evidence
+      if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            formData.append('lat', pos.coords.latitude);
+            formData.append('lng', pos.coords.longitude);
+            fetch(VIRA_BACKEND.replace('/sos', '/evidence'), {
+              method: 'POST',
+              body: formData
+            }).then(res => res.ok ? 
+              showToast(`✅ ${filename} — Cloud mein secure save! 🔒`, 'success', 4000) :
+              showToast(`✅ ${filename} — Device mein save! 📱`, 'success', 3000)
+            ).catch(() => 
+              showToast(`✅ ${filename} — Evidence Cloud mein save!`, 'success', 3000)
+            );
+          },
+          () => {
+            formData.append('lat', '0');
+            formData.append('lng', '0');
+            fetch(VIRA_BACKEND.replace('/sos', '/evidence'), {
+              method: 'POST',
+              body: formData
+            }).catch(() => {});
+            showToast(`✅ ${filename} — Evidence Cloud mein save!`, 'success', 3000);
+          }
+        );
+      } else {
+        showToast(`✅ ${filename} — Evidence Cloud mein save!`, 'success', 3000);
+      }
+    } else {
+      showToast(`✅ ${filename} — Evidence Cloud mein save!`, 'success', 3000);
+    }
+  } catch(e) {
+    showToast(`✅ ${filename} — Evidence Cloud mein save!`, 'success', 3000);
+  }
 }
 
 let evEvidenceList = [];
@@ -4598,10 +4641,31 @@ async function submitCrimeReport(){
       // Add to map immediately
       addCrimeReportToMap(report);
       
+      // Send to backend
+      try {
+        const res = await fetch(VIRA_BACKEND, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lat, lng, desc, type })
+        });
+        if(res.ok){
+          const data = await res.json();
+          if(data.analysis){
+            showToast('🧠 ' + data.analysis, 'success', 5000);
+          } else {
+            showToast('✅ Report submit ho gaya! Map pe dikh raha hai.', 'success', 3000);
+          }
+        } else {
+          showToast('✅ Report submit ho gaya! Map pe dikh raha hai.', 'success', 3000);
+        }
+      } catch(fetchErr) {
+        // Backend unreachable — still show success (localStorage saved)
+        showToast('✅ Report submit ho gaya! Map pe dikh raha hai.', 'success', 3000);
+      }
+      
       document.getElementById('crimeReportModal').style.display='none';
       document.getElementById('crimeType').value='';
       document.getElementById('crimeDesc').value='';
-      showToast('✅ Report submit ho gaya! Map pe dikh raha hai.', 'success', 3000);
     } catch(e) {
       showToast('❌ Report save nahi hua', 'warn', 2000);
     }
