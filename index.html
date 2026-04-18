@@ -2443,23 +2443,44 @@ function initMap(userLat, userLng){
 }
 
 
-async function generateAICommands(lat, lng, nearby){
-  const loading = document.getElementById('aiCmdLoading');
-  const body = document.getElementById('aiCmdBody');
-  loading.style.display='flex'; body.style.display='none';
-  document.getElementById('aiCmdSub').textContent = 'Location analyze ho rahi hai...';
+async function generateAICommands(lat, lng, nearby) {
+    // ... (purana loading wala code) ...
 
-  const danger5 = nearby.filter(z=>z.dist<5);
-  const danger20 = nearby.filter(z=>z.dist<20);
-  const closestZone = nearby[0];
-  const situationType = danger5.length>0?'danger':danger20.length>0?'warn':'safe';
+    try {
+        // 1. Render Backend ko call
+        const res = await fetch("https://virasafe-backend.onrender.com/api/sos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                lat: lat,
+                lng: lng,
+                type: 'AI_ANALYZE',
+                desc: `Situation: 5km danger: ${danger5.length}, Closest: ${closestZone ? closestZone.name : 'None'}`
+            })
+        });
 
-  try{
-    const res = await fetch("https://// Ye wala fetch use karo jo tere Render backend pe jaye const response = await fetch("https://virasafe-backend.onrender.com/api/sos", {     method: 'POST',     // Agar JSON bhej rahe ho toh:     headers: { 'Content-Type': 'application/json' },     body: JSON.stringify(reportData)      // Agar Audio bhej rahe ho toh FormData use karna jo maine pehle diya tha });/v1/messages",{
-      method:"POST", headers:{"Content-Type":"application/json","x-api-key":VIRA_API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-sonnet-4-20250514", max_tokens:600,
-        messages:[{role:"user", content:`Tu VIRA safety app ka AI safety advisor hai. Ek aurat ki location analyze kar.
+        // 2. Jo code tune abhi dikhaya (Response handle karna)
+        const data = await res.json();
+        const parsed = data; 
 
+        loading.style.display = 'none'; 
+        body.style.display = 'flex';
+        document.getElementById('aiCmdSub').textContent = 'AI analysis complete — ' + new Date().toLocaleTimeString('hi-IN');
+        
+        if(parsed.commands && Array.isArray(parsed.commands)) {
+            renderAICommands(parsed.commands); 
+        }
+        
+        if(parsed.situation) {
+            document.getElementById('aiSituationText').textContent = parsed.situation;
+        }
+
+    } catch (error) {
+        console.error("AI Error:", error);
+        loading.style.display = 'none';
+        showToast("AI analysis fail ho gaya!", "error");
+    }
+}
 Situation:
 - Location: ${lat.toFixed(4)}, ${lng.toFixed(4)}
 - 5km ke andar danger zones: ${danger5.length}
