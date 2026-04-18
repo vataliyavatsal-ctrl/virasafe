@@ -2444,10 +2444,21 @@ function initMap(userLat, userLng){
 
 
 async function generateAICommands(lat, lng, nearby) {
-    // ... (purana loading wala code) ...
+    async function generateAICommands(lat, lng, nearby) {
+    const loading = document.getElementById('aiCmdLoading');
+    const body = document.getElementById('aiCmdBody');
+    
+    // UI setup
+    loading.style.display = 'flex'; 
+    body.style.display = 'none';
+    document.getElementById('aiCmdSub').textContent = 'Location analyze ho rahi hai...';
+
+    // Filters (Ye data bhejne ke liye zaruri hai)
+    const danger5 = nearby.filter(z => z.dist < 5);
+    const closestZone = nearby[0];
 
     try {
-        // 1. Render Backend ko call
+        // --- 1. BACKEND CALL ---
         const res = await fetch("https://virasafe-backend.onrender.com/api/sos", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -2459,7 +2470,7 @@ async function generateAICommands(lat, lng, nearby) {
             })
         });
 
-        // 2. Jo code tune abhi dikhaya (Response handle karna)
+        // --- 2. RESPONSE HANDLING ---
         const data = await res.json();
         const parsed = data; 
 
@@ -2477,8 +2488,13 @@ async function generateAICommands(lat, lng, nearby) {
 
     } catch (error) {
         console.error("AI Error:", error);
-        loading.style.display = 'none';
-        showToast("AI analysis fail ho gaya!", "error");
+        if (loading) loading.style.display = 'none';
+        // Check if showToast exists, else use alert
+        if (typeof showToast === "function") {
+            showToast("AI analysis fail ho gaya!", "error");
+        } else {
+            alert("AI analysis fail ho gaya!");
+        }
     }
 }
 Situation:
